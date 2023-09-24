@@ -3,13 +3,22 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner scanner = new Scanner(System.in);
+    static MoneyManager mm = new MoneyManager();
+
+    //Leaving all these variables here since it works. There may be a more efficient way to do things
+    private static float monthly;
+    private static float carBudget;
+    private static float carPrice;
+    private static float houseCost;
+    private static float rate;
+    private static float interestRate;
+    private static float investmentAmount;
 
     public static void main(String[] args) {
-
-        System.out.print("Exit Program -> 0\nCalculate Salary -> 1\nOption: ");
+        System.out.println("Exit Program -> 0\nCalculate Salary -> 1");
         switch(scanner.nextInt()){
             case 0 -> System.exit(0);
-            case 1 ->  enterSalary();
+            case 1 -> enterSalary();
         }
     }
 
@@ -18,35 +27,60 @@ public class Main {
         System.out.print("Salary After Tax: ");
 
         float salaryInput = scanner.nextFloat();
+        mm.setSalary(salaryInput);
 
-        //Pass salary into a second class that calculates cost and uses
-        //variables for other features
+        //Do all the calculations to be able to set variables
+        monthly = mm.getSalary() / 12;
+        houseCost = monthly * 0.45f;
+        carBudget = monthly * 0.15f;
+        rate = mm.getInterest();
+        interestRate = mm.getMonthlyRate();
+        investmentAmount = monthly * 0.20f;
+        carPrice = mm.getCarPrice();
 
-        //Set the variables through a setter in second class
+        mm.setMonthly(monthly);
+        System.out.println(mm.showInfo());
+
+        mm.setCarBudget(carBudget);
+        mm.setHouseCost(houseCost);
+        mm.setCarPrice(carPrice);
+        mm.setInvestmentAmount(investmentAmount);
+        mm.calcCosts();
 
         choiceToEdit();
     }
 
 
-    public static void editValues() {
-        //Allow the user to edit the variables for house costs and car costs
+    public static void editValues(float carBudget, float houseCost) {
+        //Shows the previous Car Budget and House Budget and then allows the user to edit it to their own value.
+        System.out.print("Edit Car Budget from £" + mm.getCarBudget() + " -> £");
+        float carBudgetEdit = scanner.nextFloat();
+        mm.setCarBudget(carBudgetEdit);
+
+        System.out.print("Edit House Budget from £" + mm.getHouseCost() + " -> £");
+        float houseBudgetEdit = scanner.nextFloat();
+        mm.setHouseCost(houseBudgetEdit);
+        mm.setCarPrice(carPrice);
+        mm.calcCosts();
+
+        choiceToEdit();
     }
 
     public static void choiceToEdit(){
         System.out.println("\n0 -> Main Menu\n1 -> Edit Values\n2 -> Emergency Fund Calculator\n3 -> Retirement Fund Calculator");
         int choice = scanner.nextInt();
         switch(choice){
-            case 0 -> main(null); //Go back to main where you can
-            //input salary and go through the code again
-            case 1 -> editValues(); // pass the car and house price
+            case 0 -> main(null);
+            case 1 -> editValues(carBudget, houseCost);
             case 2 -> {
                 System.out.print("Spending Money Per Month: ");
-                //Get and set the spending money to make an accurate calculation
+                mm.setAmountToSpend(scanner.nextInt());
+                mm.emergencyFund();
                 choiceToEdit();
             }
             case 3 -> {
                 System.out.print("What is your age? ");
-                //Let user input their age to calculate how many years until retirement
+                mm.retirementFund(scanner.nextInt());
                 choiceToEdit();
             }
             default -> {

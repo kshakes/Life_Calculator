@@ -124,7 +124,7 @@ public class MoneyManager {
                 "   Car: £" + carBudget +
                 "   House: £" + houseCost +
                 "   Food: £" + foodCost +
-                "\n                 Total :£" + needs);
+                "\n                 Total: £" + needs);
         System.out.println("--------STRICT SAVING--------");
         while (currentSaved <= fund){
             currentSaved += left;
